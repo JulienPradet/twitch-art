@@ -11,17 +11,25 @@ export const FresqueCanvasFunction = (
   data: TwitchData,
   onSelectUser: (user: TwitchUser) => void
 ) => {
+  const userWidth = 100;
+  const userHeight = userWidth * 2;
+
+  const gap = Math.round(userWidth / 3);
+
+  const numberOfUsersPerRows = Math.floor(width / (userWidth + gap * 2));
+  const numberOfUsersPerTwoRows = numberOfUsersPerRows * 2 - 1;
+
+  const canvasHeight = Math.ceil(
+    Math.ceil(data.users.length / numberOfUsersPerTwoRows) *
+      (userHeight + gap * 2) +
+      gap +
+      userHeight / 2
+  );
+  const canvasWidth = numberOfUsersPerRows * (userWidth + gap * 2);
+
   return canvasJp(
     canvasElement,
     async function (t, frame, random) {
-      const userWidth = 100;
-      const userHeight = userWidth * 2;
-
-      const gap = userWidth / 3;
-
-      const numberOfUsersPerRows = Math.floor(width / (userWidth + gap * 2));
-      const numberOfUsersPerTwoRows = numberOfUsersPerRows * 2 - 1;
-
       const elements = data.users.flatMap((user, index) => {
         let positionY = Math.floor(Math.floor(index / numberOfUsersPerTwoRows));
         let positionX = index % numberOfUsersPerTwoRows;
@@ -44,8 +52,8 @@ export const FresqueCanvasFunction = (
       };
     },
     {
-      width: width,
-      height: height,
+      width: canvasWidth,
+      height: canvasHeight,
       resolution: 1,
       title: "TwitchArt",
       animation: false,

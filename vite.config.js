@@ -17,7 +17,7 @@ export default defineConfig({
   },
   server: {
     host: process.env.HOST,
-    port: process.env.PORT,
+    port: process.env.DEV_PORT,
   },
   plugins: [
     svelte({

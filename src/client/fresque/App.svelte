@@ -10,16 +10,50 @@
   let canvasContainer: HTMLElement;
   let selectedUser: TwitchUser | null = null;
 
-  onMount(async () => {
-    await FresqueCanvasFunction(
-      canvasContainer,
-      window.innerWidth,
-      window.innerHeight,
-      data,
-      (user) => {
-        selectedUser = user;
+  const debounce = (fn: () => void, timeoutMs: number) => {
+    let timeoutRef: NodeJS.Timeout | null = null;
+
+    return () => {
+      if (timeoutRef) {
+        clearTimeout(timeoutRef);
       }
-    );
+      timeoutRef = setTimeout(() => {
+        fn();
+        timeoutRef = null;
+      }, timeoutMs);
+    };
+  };
+
+  onMount(async () => {
+    let removeListeners: (() => void) | null = null;
+    const draw = debounce(async () => {
+      if (removeListeners) {
+        removeListeners();
+        removeListeners = null;
+        canvasContainer.innerHTML = "";
+      }
+
+      removeListeners = await FresqueCanvasFunction(
+        canvasContainer,
+        window.innerWidth,
+        window.innerHeight,
+        data,
+        (user) => {
+          selectedUser = user;
+        }
+      );
+    }, 200);
+
+    draw();
+
+    window.addEventListener("resize", draw);
+
+    return () => {
+      if (removeListeners) {
+        removeListeners();
+      }
+      window.removeEventListener("resize", draw);
+    };
   });
 </script>
 
@@ -37,4 +71,7 @@
 {/if}
 
 <style>
+  .canvas {
+    margin: 0 auto;
+  }
 </style>

@@ -15,14 +15,22 @@ if (!container) {
   );
 }
 
-const width = 250;
-const height = 500;
+const width = 200;
+const height = 400;
 
 canvasJp(
   container,
-  async function (t, frame) {
+  async function (t, frame, random) {
     return {
-      elements: makeUserElements(width, height, user),
+      elements: makeUserElements(
+        random,
+        width,
+        height,
+        user,
+        undefined,
+        undefined,
+        false
+      ),
     };
   },
   {
@@ -35,6 +43,6 @@ canvasJp(
     embed: false,
     exportSketch: false,
     numberOfFrames: 0,
-    interactive: false,
+    interactive: true,
   }
 );

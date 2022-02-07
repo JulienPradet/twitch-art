@@ -5,15 +5,17 @@
 
   import { TwitchUser } from "../../TwitchUser";
   import { AlertCanvasFunction } from "../twitch-alerts/AlertCanvasFunction";
+  import { StyleParams } from "../canvas/styles";
 
   export let user: TwitchUser;
 
   let canvasContainer: HTMLElement;
+  let params: StyleParams;
 
-  onMount(() => {
+  onMount(async () => {
     const width = Math.min(300, canvasContainer.clientWidth);
 
-    AlertCanvasFunction(canvasContainer, width, width * 2, user);
+    params = await AlertCanvasFunction(canvasContainer, width, width * 2, user);
   });
 </script>
 
@@ -27,6 +29,17 @@
     bind:this={canvasContainer}
     in:fly={{ y: 35, duration: 180, delay: 400, easing: backOut }}
   />
+
+  {#if params}
+    <dl>
+      <dt>Style</dt>
+      <dd>{params.style}</dd>
+    </dl>
+    <dl>
+      <dt>Number of messages</dt>
+      <dd>{user.messageCount}</dd>
+    </dl>
+  {/if}
 </div>
 
 <style>
