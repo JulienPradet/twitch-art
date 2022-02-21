@@ -12,4 +12,11 @@ declare module "canvas-sketch-util/random" {
 }
 declare module "canvas-sketch-util/math" {
   export const clamp: (value: number, min: number, max: number) => number;
+  export const mapRange: (
+    value: number,
+    valueMin: number,
+    valueMax: number,
+    mapMin: number,
+    mapMax: number
+  ) => number;
 }
