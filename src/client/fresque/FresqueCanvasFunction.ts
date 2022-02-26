@@ -4,13 +4,20 @@ import { makeUserElements } from "../canvas/makeUserElements";
 import { TwitchData } from "../../DataManager";
 import { TwitchUser } from "../../TwitchUser";
 
-export const FresqueCanvasFunction = (
+export const FresqueCanvasFunction = async (
   canvasElement: HTMLElement,
   width: number,
   height: number,
   data: TwitchData,
-  onSelectUser: (user: TwitchUser) => void
-) => {
+  onSelectUser: (user: TwitchUser) => void,
+  onFocus: (user: TwitchUser, offsetX: number, offsetY: number) => void,
+  onBlur: (user: TwitchUser, offsetX: number, offsetY: number) => void
+): Promise<{
+  canvasHeight: number;
+  userWidth: number;
+  userHeight: number;
+  removeListeners: () => void;
+}> => {
   const userWidth = 100;
   const userHeight = userWidth * 2;
 
@@ -27,7 +34,7 @@ export const FresqueCanvasFunction = (
   );
   const canvasWidth = numberOfUsersPerRows * (userWidth + gap * 2);
 
-  return canvasJp(
+  const removeListeners = await canvasJp(
     canvasElement,
     async function (t, frame, random) {
       const elements = data.users.flatMap((user, index) => {
@@ -39,12 +46,44 @@ export const FresqueCanvasFunction = (
           (userHeight / 2 + gap) * (positionX % 2) +
           gap;
 
+        const userOffsetX = offsetX + userWidth / 2;
+        const userOffsetY = canvasHeight - offsetY - userHeight;
+
         return Translate(
           offsetX,
           offsetY,
-          makeUserElements(random, userWidth, userHeight, user, () => {
-            onSelectUser(user);
-          })
+          makeUserElements(random, userWidth, userHeight, user, [
+            {
+              on: "click",
+              trigger: () => {
+                onSelectUser(user);
+              },
+            },
+            {
+              on: "focus",
+              trigger: () => {
+                onFocus(user, userOffsetX, userOffsetY);
+              },
+            },
+            {
+              on: "mouseenter",
+              trigger: () => {
+                onFocus(user, userOffsetX, userOffsetY);
+              },
+            },
+            {
+              on: "blur",
+              trigger: () => {
+                onBlur(user, userOffsetX, userOffsetY);
+              },
+            },
+            {
+              on: "mouseleave",
+              trigger: () => {
+                onBlur(user, userOffsetX, userOffsetY);
+              },
+            },
+          ])
         );
       });
       return {
@@ -64,4 +103,11 @@ export const FresqueCanvasFunction = (
       interactive: true,
     }
   );
+
+  return {
+    canvasHeight,
+    userWidth,
+    userHeight,
+    removeListeners,
+  };
 };

@@ -1,9 +1,13 @@
-import { CanvasJpDrawable, CanvasJpRandom } from "canvas-jp";
+import {
+  CanvasJpDrawable,
+  CanvasJpRandom,
+  CanvasJpStrokeStyle,
+} from "canvas-jp";
 import { Polygon } from "canvas-jp/Polygon";
 import { Point } from "canvas-jp/Point";
 import { Color } from "canvas-jp/Color";
 import { CanvasJpShape } from "canvas-jp/Shape";
-import { ClickRegion } from "canvas-jp/interaction";
+import { CanvasJpEventHandlerList, ClickRegion } from "canvas-jp/interaction";
 import { TwitchUser } from "../../TwitchUser";
 import { Seed } from "canvas-jp/Seed";
 import { Clip } from "canvas-jp/Clip";
@@ -31,10 +35,13 @@ const makeElements = (
   width: number,
   height: number,
   user: TwitchUser,
-  onClick?: () => void
+  events?: CanvasJpEventHandlerList
 ): { elements: CanvasJpDrawable[]; params: { style: string } } => {
-  const makeClickRegion = (shape: CanvasJpShape, onClick: () => void) => {
-    return ClickRegion(shape.points, onClick);
+  const makeClickRegion = (
+    shape: CanvasJpShape,
+    events: CanvasJpEventHandlerList
+  ) => {
+    return ClickRegion(shape.points, events);
   };
 
   const pixel = height / 500;
@@ -48,7 +55,7 @@ const makeElements = (
     color: Color(206 / 360, 0.5, 0.11),
     width: 0.5,
     opacity: 1,
-    style: null,
+    style: CanvasJpStrokeStyle.round,
   });
 
   const styleIndex = Math.floor(random.value() * styles.length);
@@ -63,8 +70,8 @@ const makeElements = (
     user
   );
 
-  if (onClick) {
-    elements.push(makeClickRegion(shape, onClick));
+  if (events && events.length > 0) {
+    elements.push(makeClickRegion(shape, events));
   }
 
   return {
@@ -78,7 +85,7 @@ export const makeUserElements = (
   width: number,
   height: number,
   user: TwitchUser,
-  onClick?: () => void,
+  events?: CanvasJpEventHandlerList,
   onParams?: (params: StyleParams) => void,
   useSeed = true
 ): CanvasJpDrawable[] => {
@@ -90,7 +97,7 @@ export const makeUserElements = (
           width,
           height,
           user,
-          onClick
+          events
         );
         if (onParams) {
           onParams(params);
@@ -100,6 +107,6 @@ export const makeUserElements = (
       }),
     ];
   } else {
-    return makeElements(random, width, height, user, onClick).elements;
+    return makeElements(random, width, height, user, events).elements;
   }
 };
