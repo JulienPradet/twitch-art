@@ -53,12 +53,12 @@
     width: 100%;
     background: linear-gradient(
       0deg,
-      rgba(0, 0, 0, 1) 0%,
-      rgba(0, 0, 0, 0.9) 50%,
+      rgba(0, 0, 0, 0.9) 0%,
+      70%,
       rgba(0, 0, 0, 0) 100%
     );
-    height: 200px;
-    padding-bottom: 65px;
+    height: 130px;
+    padding-bottom: 20px;
     padding-left: 20px;
     position: fixed;
     bottom: 0;
@@ -72,5 +72,6 @@
   .description {
     margin-bottom: 10px;
     font-size: 0.85em;
+    font-weight: bold;
   }
 </style>
