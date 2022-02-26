@@ -4,6 +4,7 @@ import fastifyStatic from "fastify-static";
 import { join } from "path";
 
 import { DataEvent } from "./client/twitch-alerts/Events";
+import { devPort } from "./env";
 
 const Server = async (host: string, port: number) => {
   const app = fastify();
@@ -61,9 +62,11 @@ const Server = async (host: string, port: number) => {
     const fastifyProxy = (await import("fastify-http-proxy")).default;
 
     app.register(fastifyProxy, {
-      upstream: "http://localhost:3000",
+      upstream: `http://localhost:${devPort}`,
     });
   }
+
+  app.post("/trigger", (request: FastifyRequest, reply: FastifyReply) => {});
 
   app.get("*", {}, (request, reply) => {
     reply.send("OK");
