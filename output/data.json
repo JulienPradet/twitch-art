@@ -1,7 +1,7 @@
 {
   "users": [
     {
-      "messageCount": 109,
+      "messageCount": 116,
       "id": "253152270",
       "displayName": "superroipatate"
     },
@@ -290,7 +290,7 @@
       "displayName": "Pacproduct"
     },
     {
-      "messageCount": 19,
+      "messageCount": 22,
       "id": "604388211",
       "displayName": "patatedouce9000",
       "followingSince": "2022-02-14T14:21:01.000Z"
@@ -329,6 +329,12 @@
       "id": "604642560",
       "displayName": "lehoumous",
       "followingSince": "2022-02-21T13:18:59.000Z"
+    },
+    {
+      "messageCount": 0,
+      "followingSince": "2022-02-21T15:58:31.000Z",
+      "id": "129398898",
+      "displayName": "Suika_WTRMLN"
     }
   ]
 }
