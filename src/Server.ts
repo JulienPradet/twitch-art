@@ -1,5 +1,5 @@
-import fastify from "fastify";
-import fastifyWebsocket from "fastify-websocket";
+import fastify, { FastifyReply, FastifyRequest } from "fastify";
+import fastifyWebsocket, { SocketStream } from "fastify-websocket";
 import fastifyStatic from "fastify-static";
 import { join } from "path";
 
@@ -10,7 +10,19 @@ const Server = async (host: string, port: number) => {
 
   let connections: WebSocket[] = [];
 
-  app.register(fastifyWebsocket);
+  app.register(fastifyWebsocket, {
+    errorHandler: (
+      error,
+      connection: SocketStream,
+      req: FastifyRequest,
+      reply: FastifyReply
+    ) => {
+      connections = connections.filter(
+        (socket) => socket !== connection.socket
+      );
+      connection.destroy(error);
+    },
+  });
   app.get(
     "/ws",
     { websocket: true },
@@ -24,6 +36,12 @@ const Server = async (host: string, port: number) => {
     }
   );
 
+  const triggerMessage = (message: DataEvent) => {
+    connections.forEach((socket) => {
+      socket.send(JSON.stringify(message));
+    });
+  };
+
   if (process.env.NODE_ENV === "production") {
     app.register(fastifyStatic, {
       root: join(process.cwd(), "dist/client"),
@@ -32,6 +50,13 @@ const Server = async (host: string, port: number) => {
     app.get("/output/data.json", (request, reply) => {
       reply.sendFile("data.json", join(process.cwd(), "output"));
     });
+
+    setInterval(() => {
+      triggerMessage({
+        type: "live",
+        data: null,
+      });
+    }, 50 * 1000);
   } else {
     const fastifyProxy = (await import("fastify-http-proxy")).default;
 
@@ -45,11 +70,7 @@ const Server = async (host: string, port: number) => {
   });
 
   return {
-    triggerMessage: (message: DataEvent) => {
-      connections.forEach((socket) => {
-        socket.send(JSON.stringify(message));
-      });
-    },
+    triggerMessage,
     start: () => {
       app.listen(port, host, (err) => {
         console.log("start", port);

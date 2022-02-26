@@ -10,4 +10,10 @@ export type AlertEvent = {
   data: AlertClientData;
 };
 
-export type DataEvent = UserMessageEvent | AlertEvent;
+// Used to keep the connection opened
+export type LiveEvent = {
+  type: "live";
+  data: null;
+};
+
+export type DataEvent = UserMessageEvent | AlertEvent | LiveEvent;
