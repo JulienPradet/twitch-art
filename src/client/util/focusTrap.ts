@@ -33,7 +33,11 @@ const useFocusTrap = (node: HTMLElement, focusDelay = 0) => {
       if (timeout) {
         clearTimeout(timeout);
       }
-      if (previousFocusElement && previousFocusElement instanceof HTMLElement) {
+      if (
+        previousFocusElement &&
+        (previousFocusElement instanceof HTMLElement ||
+          previousFocusElement instanceof SVGElement)
+      ) {
         previousFocusElement.focus();
       }
       document.removeEventListener("keydown", trapFocusListener);

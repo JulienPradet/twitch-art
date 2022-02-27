@@ -7,7 +7,11 @@ import { Polygon } from "canvas-jp/Polygon";
 import { Point } from "canvas-jp/Point";
 import { Color } from "canvas-jp/Color";
 import { CanvasJpShape } from "canvas-jp/Shape";
-import { CanvasJpEventHandlerList, ClickRegion } from "canvas-jp/interaction";
+import {
+  CanvasJpEventHandlerList,
+  ClickRegion,
+  RenderOnlyWhenVisible,
+} from "canvas-jp/interaction";
 import { TwitchUser } from "../../TwitchUser";
 import { Seed } from "canvas-jp/Seed";
 import { Clip } from "canvas-jp/Clip";
@@ -74,8 +78,13 @@ const makeElements = (
     elements.push(makeClickRegion(shape, events));
   }
 
+  const clippedElements = [Clip(shape, elements)];
+
   return {
-    elements: [Clip(shape, elements)],
+    elements:
+      events && events.length > 0
+        ? [RenderOnlyWhenVisible(shape.points, clippedElements)]
+        : clippedElements,
     params: params,
   };
 };

@@ -54,8 +54,9 @@
     bottom: 0;
     right: 0;
     width: 20vw;
-    min-width: 300px;
+    min-width: 320px;
     box-shadow: 0 0 2em var(--c-shadow);
     outline: none;
+    overflow-y: auto;
   }
 </style>

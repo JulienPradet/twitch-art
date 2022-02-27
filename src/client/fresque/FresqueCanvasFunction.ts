@@ -21,30 +21,38 @@ export const FresqueCanvasFunction = async (
   const userWidth = 100;
   const userHeight = userWidth * 2;
 
+  const margin = 10;
+
   const gap = Math.round(userWidth / 3);
 
   const numberOfUsersPerRows = Math.floor(width / (userWidth + gap * 2));
   const numberOfUsersPerTwoRows = numberOfUsersPerRows * 2 - 1;
 
-  const canvasHeight = Math.ceil(
-    Math.ceil(data.users.length / numberOfUsersPerTwoRows) *
-      (userHeight + gap * 2) +
-      gap +
-      userHeight / 2
-  );
-  const canvasWidth = numberOfUsersPerRows * (userWidth + gap * 2);
+  const canvasHeight =
+    Math.ceil(
+      Math.ceil(data.users.length / numberOfUsersPerTwoRows) *
+        (userHeight + gap * 2) -
+        gap +
+        userHeight / 2
+    ) +
+    margin * 2;
+  const canvasWidth =
+    numberOfUsersPerRows * (userWidth + gap * 2) - gap * 2 + margin * 2;
 
   const removeListeners = await canvasJp(
     canvasElement,
     async function (t, frame, random) {
       const elements = data.users.flatMap((user, index) => {
-        let positionY = Math.floor(Math.floor(index / numberOfUsersPerTwoRows));
+        let positionY =
+          Math.floor(Math.floor(index / numberOfUsersPerTwoRows)) + 1;
         let positionX = index % numberOfUsersPerTwoRows;
-        const offsetX = (userWidth / 2 + gap) * positionX + gap;
+        const offsetX = (userWidth / 2 + gap) * positionX + margin;
         const offsetY =
-          (userHeight + gap * 2) * positionY +
-          (userHeight / 2 + gap) * (positionX % 2) +
-          gap;
+          canvasHeight -
+          ((userHeight + gap * 2) * positionY +
+            (userHeight / 2 + gap) * (positionX % 2) -
+            gap * 2 +
+            margin);
 
         const userOffsetX = offsetX + userWidth / 2;
         const userOffsetY = canvasHeight - offsetY - userHeight;
@@ -81,6 +89,14 @@ export const FresqueCanvasFunction = async (
               on: "mouseleave",
               trigger: () => {
                 onBlur(user, userOffsetX, userOffsetY);
+              },
+            },
+            {
+              on: "keydown",
+              trigger: (event: KeyboardEvent) => {
+                if (event.key === "Space" || event.key === "Enter") {
+                  onSelectUser(user);
+                }
               },
             },
           ])

@@ -15,6 +15,7 @@
     offsetX: number;
     offsetY: number;
   } | null = null;
+  let focusTimeout: NodeJS.Timeout | null = null;
   let height: number | null = null;
   let userWidth: number | null = null;
 
@@ -41,6 +42,8 @@
         canvasContainer.innerHTML = "";
       }
 
+      latestFocus = null;
+
       const result = await FresqueCanvasFunction(
         canvasContainer,
         window.innerWidth,
@@ -50,10 +53,19 @@
           selectedUser = user;
         },
         (user, offsetX, offsetY) => {
+          if (focusTimeout) {
+            clearTimeout(focusTimeout);
+          }
           latestFocus = { hidden: false, user, offsetX, offsetY };
         },
         (user, offsetX, offsetY) => {
-          latestFocus = { hidden: true, user, offsetX, offsetY };
+          if (focusTimeout) {
+            clearTimeout();
+          }
+          focusTimeout = setTimeout(() => {
+            latestFocus = { hidden: true, user, offsetX, offsetY };
+            focusTimeout = null;
+          }, 300);
         }
       );
 
@@ -75,6 +87,12 @@
   });
 </script>
 
+<h1>
+  Les badges des viewers de <a href="https://twitch.tv/superroipatate"
+    >SuperRoiPatate</a
+  >
+</h1>
+
 <div class="canvas-container">
   <div class="canvas" bind:this={canvasContainer} />
 
@@ -83,7 +101,11 @@
       aria-hidden={!latestFocus.user || null}
       aria-live={latestFocus.user ? "assertive" : "off"}
       class="tooltip"
-      style={`--offset-x: ${latestFocus.offsetX}px; --offset-y: ${latestFocus.offsetY}px; --height: ${height}px; --width: ${userWidth}px`}
+      style={`display: ${latestFocus.hidden ? "none" : "block"}; --offset-x: ${
+        latestFocus.offsetX
+      }px; --offset-y: ${
+        latestFocus.offsetY
+      }px; --height: ${height}px; --width: ${userWidth}px`}
     >
       {latestFocus.user.displayName}
     </div>
@@ -132,6 +154,17 @@
     transform: translateX(-50%);
     padding: 10px;
     text-align: center;
-    background: rgba(0 0 0 / 30%);
+    background: rgba(0 0 0 / 50%);
+    backdrop-filter: blur(5px);
+    font-weight: bold;
+  }
+
+  h1 {
+    margin: 3rem 2rem;
+    text-align: center;
+  }
+
+  a {
+    color: inherit;
   }
 </style>
