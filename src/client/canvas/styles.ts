@@ -4,6 +4,7 @@ import { TwitchUser } from "../../TwitchUser";
 import makeArabesque from "./makeArabesque";
 import { HaloParams, makeHalo } from "./makeHalo";
 import { makeLandscape } from "./makeLandscape";
+import makePaper from "./makePaper";
 import { makeRandomWalker } from "./makeRandomWalker";
 import makeSpiral from "./makeSpiral";
 
@@ -30,4 +31,5 @@ export const styles: CarreauFactory[] = [
   //   makeRandomWalker,
   makeArabesque,
   makeSpiral,
+  makePaper,
 ];
