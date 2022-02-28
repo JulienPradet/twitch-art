@@ -5,6 +5,7 @@ import makeArabesque from "./makeArabesque";
 import { HaloParams, makeHalo } from "./makeHalo";
 import { makeLandscape } from "./makeLandscape";
 import { makeRandomWalker } from "./makeRandomWalker";
+import makeSpiral from "./makeSpiral";
 
 export interface StyleParams {
   style: string;
@@ -28,4 +29,5 @@ export const styles: CarreauFactory[] = [
   makeLandscape,
   //   makeRandomWalker,
   makeArabesque,
+  makeSpiral,
 ];
