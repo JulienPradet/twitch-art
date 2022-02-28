@@ -11,6 +11,7 @@ export default defineConfig({
       input: {
         main: resolve(process.cwd(), "index.html"),
         fresque: resolve(process.cwd(), "fresque.html"),
+        start: resolve(process.cwd(), "start.html"),
       },
     },
     outDir: resolve(process.cwd(), "dist/client"),
