@@ -339,12 +339,14 @@
     {
       "messageCount": 4,
       "id": "250707723",
-      "displayName": "titimoby"
+      "displayName": "titimoby",
+      "followingSince": "2022-02-28T12:39:03.000Z"
     },
     {
       "messageCount": 1,
       "id": "177659163",
-      "displayName": "nono007"
+      "displayName": "Nono007",
+      "followingSince": "2022-02-28T12:39:00.000Z"
     },
     {
       "messageCount": 1,
@@ -354,7 +356,14 @@
     {
       "messageCount": 10,
       "id": "76541264",
-      "displayName": "cow974"
+      "displayName": "Cow974",
+      "followingSince": "2022-02-28T13:54:04.000Z"
+    },
+    {
+      "messageCount": 0,
+      "followingSince": "2022-02-28T12:42:32.000Z",
+      "id": "107199053",
+      "displayName": "g0uz_"
     }
   ]
 }
