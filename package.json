@@ -5,11 +5,12 @@
   "description": "",
   "main": "index.ts",
   "scripts": {
-    "predev": "npm run build:server",
+    "predev": "npm run build:server && npm run build:assets",
     "dev": "vite & node dist/index.js",
     "build:server": "esbuild src/index.ts --bundle  --platform=node --external:fastify --external:fastify-websocket --external:fastify-http-proxy --external:fastify-static --external:tmi.js --external:node-fetch --external:dotenv --format=esm --outdir=dist",
     "build:pages": "vite build",
-    "build": "npm run build:pages && npm run build:server",
+    "build:assets": "cp src/client/start/roipatate.png dist/client/assets",
+    "build": "npm run build:pages && npm run build:server && npm run build:assets",
     "serve": "NODE_ENV=production node dist/index.js",
     "test": "vitest"
   },
